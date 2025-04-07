@@ -169,7 +169,52 @@
              font-weight: 600;
              margin-bottom: 1rem;
          }
+<style>
+    /* 既存のスタイルを確認し、追加する */
+    @media (max-width: 768px) {
+        .container {
+            padding: 10px;
+        }
+        .collapsible-header h2, .collapsible-header h3 {
+            font-size: 1.1em; /* フォントサイズを少し小さく */
+        }
+        .collapsible-content {
+            padding: 0 1em; /* パディングを調整 */
+        }
+        .section-top-flex {
+            flex-direction: column; /* 縦積みに変更 */
+            align-items: center; /* 中央揃え */
+            gap: 1em; /* 間隔を調整 */
+            margin-bottom: 1em; /* マージン調整 */
+        }
+        .section-image {
+            flex-basis: auto; /* flex-basisをリセット */
+            max-width: 60%; /* 画像の最大幅を調整 */
+            margin-bottom: 1em; /* 画像の下にマージンを追加 */
+        }
+        .section-intro-text {
+            width: 100%; /* テキストは全幅を使用 */
+        }
+        .section-intro-text p {
+            margin-top: 0; /* 念のため */
+        }
+    }
 
+    @media (max-width: 480px) {
+        h1 {
+            font-size: 1.5em; /* フォントサイズを小さく */
+        }
+        h2 {
+            font-size: 1.2em; /* フォントサイズを小さく */
+        }
+        h3 {
+            font-size: 1em; /* フォントサイズを小さく */
+        }
+        body {
+            font-size: 14px; /* 全体のフォントサイズを小さく */
+        }
+    }
+</style>
     </style>
 </head>
  
