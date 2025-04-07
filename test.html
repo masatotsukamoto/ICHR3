@@ -3,551 +3,656 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>臨床試験におけるQMS、QbDとRBA、QTL、ステークホルダーエンゲージメント </title>
+    <title>【開発担当者向け】未来の臨床試験品質をデザインする：QMS・QbD・RBA・QTLs・PPI活用術</title> 
+    
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* 基本スタイルと配色 */
-        body {
-            font-family: 'Segoe UI', Meiryo, sans-serif;
-            line-height: 1.7;
-            color: #333;
-            background-color: #fdfdfd;
-            margin: 0;
-            padding: 0;
+        /* スムーズスクロール */
+        html {
+            scroll-behavior: smooth;
         }
-        .container {
-            max-width: 900px;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: #fff;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            border-radius: 8px;
-        }
-        h1, h2, h3 {
-            color: #005f73; /* 濃い青緑 */
-            margin-top: 1.5em;
-        }
-        h1 {
-            text-align: center;
-            border-bottom: 3px solid #0a9396; /* 青緑 */
-            padding-bottom: 0.5em;
-            margin-bottom: 1em;
-        }
-        h2 {
-            border-bottom: 2px solid #e0fbfc; /* 薄い青 */
-            padding-bottom: 0.4em;
-            margin-bottom: 1em;
-        }
-        h3 {
-            border-left: 5px solid #0a9396; /* 青緑 */
-            padding-left: 0.6em;
-            margin-top: 2em;
-        }
-        ul {
-            list-style: none;
-            padding-left: 0;
-        }
-        li {
-            margin-bottom: 0.8em;
-            position: relative;
-            padding-left: 1.5em;
-        }
-        li::before {
-            content: '•';
-            color: #0a9396; /* 青緑 */
-            font-weight: bold;
-            position: absolute;
-            left: 0;
-            top: 0;
-        }
-        strong {
-            color: #003f5c; /* より濃い青 */
-            font-weight: 600;
-        }
-        blockquote {
-            border-left: 4px solid #94d2bd; /* ミントグリーン */
-            padding: 0.5em 1em;
-            margin-left: 0;
-            background-color: #f1fcf7;
-            color: #333;
-            font-style: italic;
-            border-radius: 4px;
-        }
-        .context-box {
-            background-color: #e0fbfc; /* 薄い青 */
-            border: 1px solid #94d2bd; /* ミントグリーン */
-            padding: 1em 1.5em;
-            margin-bottom: 2em;
-            border-radius: 5px;
-        }
-        .context-box strong { color: #005f73; }
-
-        /* ツールチップスタイル */
+        /* カスタムツールチップスタイル */
         .tooltip {
             position: relative;
             cursor: help;
-            border-bottom: 1px dotted #0a9396; /* 下点線で目印 */
-            font-weight: 600; /* 少し太字に */
-            color: #0077b6; /* リンクのような青 */
+            border-bottom: 1px dotted #0e7490; /* Tailwind cyan-700 */
+            font-weight: 600;
+            color: #0891b2; /* Tailwind cyan-600 */
         }
         .tooltip::after {
             content: attr(data-tooltip);
             position: absolute;
             left: 50%;
             transform: translateX(-50%);
-            bottom: 125%; /* 要素の少し上に表示 */
-            margin-bottom: 5px;
-            background-color: rgba(0, 0, 0, 0.8);
-            color: #fff;
-            padding: 8px 12px;
-            border-radius: 6px;
-            font-size: 0.9em;
+            bottom: 125%;
+            margin-bottom: 6px;
+            background-color: #1f2937; /* Tailwind gray-800 */
+            color: #f9fafb; /* Tailwind gray-50 */
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-size: 0.85em;
             line-height: 1.4;
-            white-space: normal; /* 必要に応じて改行 */
-            width: 250px; /* 幅を固定 */
+            white-space: normal;
+            width: 250px;
             text-align: left;
             opacity: 0;
             visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
+            transition: opacity 0.2s ease, visibility 0.2s ease;
             z-index: 100;
-            font-weight: normal; /* ツールチップ内は通常 */
-            border-bottom: none; /* ツールチップ内の下線は不要 */
+            font-weight: normal;
+            border-bottom: none;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
         .tooltip:hover::after {
             opacity: 1;
             visibility: visible;
         }
-
-        /* 折りたたみセクションスタイル */
-        .collapsible-section {
-            margin-bottom: 1.5em;
-            border: 1px solid #e0fbfc;
-            border-radius: 6px;
-            overflow: hidden; /* 角丸を有効に */
+        /* カスタムリストスタイル */
+        .custom-list li {
+            position: relative;
+            padding-left: 1.75rem; 
+            margin-bottom: 0.75rem;
         }
-        .collapsible-header {
-            background-color: #e0fbfc; /* 薄い青 */
-            padding: 0.8em 1.2em;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: background-color 0.2s ease;
-            border-bottom: 1px solid #caeef2; /* 少し濃い区切り線 */
-        }
-        .collapsible-header:hover {
-            background-color: #ccecf2; /* ホバー時少し濃く */
-        }
-        .collapsible-header h2, .collapsible-header h3 { /* ヘッダー内hタグ調整 */
-           margin: 0;
-           padding: 0;
-           border: none;
-           color: #005f73;
-           font-size: 1.3em; /* 少し大きめに */
-        }
-         .collapsible-header h3 { /* h3の場合の調整 */
-           font-size: 1.15em;
-         }
-        .collapsible-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.4s ease-out, padding 0.4s ease-out;
-            padding: 0 1.5em; /* 閉じた状態ではパディングなし */
-            background-color: #fff;
-        }
-        .collapsible-content.open {
-            padding: 1.5em; /* 開いた状態でパディング適用 */
-            border-top: 1px solid #e0fbfc; /* コンテンツ上部の区切り */
-            /* max-height は JS で設定 */
-        }
-        .toggle-icon {
-            font-size: 1.5em;
+        .custom-list li::before {
+            content: '✓'; 
+            position: absolute;
+            left: 0;
+            top: 1px;
+            color: #0a9396; 
             font-weight: bold;
-            color: #0a9396; /* 青緑 */
-            transition: transform 0.3s ease;
+            font-size: 1.1em;
         }
-        .collapsible-header.active .toggle-icon {
-            transform: rotate(45deg);
+         /* キーメッセージ用リストスタイル */
+        .key-message-list li {
+            position: relative;
+            padding-left: 1.75rem; 
+            margin-bottom: 0.75rem;
+            font-weight: 500;
         }
-
-        /* ===== 共通レイアウトスタイル (RBA, QTL, Stakeholder セクション用) ===== */
-        /* セクション上部のFlexレイアウト */
-        .section-top-flex {
-            display: flex;
-            align-items: flex-start; /* 上端揃え */
-            gap: 2em; /* 画像とテキストの間隔 */
-            margin-bottom: 1.5em; /* このセクションの下にマージン */
+        .key-message-list li::before {
+            content: '💡'; /* 電球アイコン */
+            position: absolute;
+            left: 0;
+            top: -1px; /* 位置調整 */
+            font-size: 1em;
         }
-
-        /* 画像スタイル (Flexアイテムとして調整) */
-        .section-image {
-            flex: 0 0 35%; /* 幅を35%に固定 (伸び縮みしない) */
-            max-width: 35%; /* 最大幅も指定 */
-            height: auto; /* 高さを自動調整 */
-            margin: 0; /* マージンリセット */
-            border-radius: 6px; /* 角丸 */
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1); /* 軽い影 */
+        /* 強調テキスト */
+        strong {
+             color: #0f766e; /* Tailwind teal-700 */
         }
-
-        /* 導入テキストコンテナ (Flexアイテムとして調整) */
-        .section-intro-text {
-            flex: 1 1 auto; /* 残りのスペースを自動で取る */
+        /* リンク */
+        a {
+            color: #0891b2; /* Tailwind cyan-600 */
+            text-decoration: none;
+            transition: color 0.2s ease;
         }
-        .section-intro-text p {
-            margin-top: 0; /* 段落上のマージンを削除 */
+        a:hover {
+            color: #0e7490; /* Tailwind cyan-700 */
+            text-decoration: underline;
         }
-
-        /* レスポンシブ対応: 画面幅が768px以下の場合 */
-        @media (max-width: 768px) {
-            .section-top-flex {
-                flex-direction: column; /* 縦積みに変更 */
-                align-items: center; /* 中央揃え */
-                gap: 1em; /* 間隔を調整 */
-                margin-bottom: 1em; /* マージン調整 */
-            }
-            .section-image {
-                flex-basis: auto; /* flex-basisをリセット */
-                max-width: 60%; /* 画像の最大幅を調整 */
-                margin-bottom: 1em; /* 画像の下にマージンを追加 */
-            }
-            .section-intro-text {
-                 width: 100%; /* テキストは全幅を使用 */
-            }
-            .section-intro-text p {
-                margin-top: 0; /* 念のため */
-            }
+        /* アイコンのベーススタイル */
+        .heading-icon {
+            display: inline-block;
+            width: 1.2em; 
+            height: 1.2em;
+            margin-right: 0.4em;
+            vertical-align: -0.15em; 
+            color: #0e7490; 
         }
-        /* ===== 共通レイアウトスタイルここまで ===== */
+        .button-icon {
+             display: inline-block;
+             width: 1.1em;
+             height: 1.1em;
+             margin-right: 0.3em;
+             vertical-align: -0.15em;
+        }
+        /* 読み上げボタン非表示 */
+        .hidden {
+            display: none;
+        }
+        /* 読み上げ中ハイライト */
+        .tts-highlight {
+            background-color: #fef9c3; /* Tailwind yellow-100 */
+            transition: background-color 0.3s ease;
+            border-radius: 4px;
+            box-shadow: 0 0 0 2px #fef08a; /* Tailwind yellow-200 */
+        }
+        /* 具体例用ボックス */
+        .example-box {
+             background-color: #f3f4f6; /* gray-100 */
+             border-left: 4px solid #fbbf24; /* amber-400 */
+             padding: 1rem 1.5rem;
+             margin-top: 1.5rem; /* 上下のマージン調整 */
+             margin-bottom: 1.5rem;
+             border-radius: 0 8px 8px 0; 
+             font-size: 0.95em; /* 少し小さく */
+        }
+        .example-box p {
+             margin-bottom: 0.5rem;
+             color: #374151; /* gray-700 */
+        }
+         .example-box p:last-child {
+             margin-bottom: 0;
+         }
+        .example-box strong {
+             color: #b45309; /* amber-700 */
+             font-weight: 600;
+        }
+        /* キーメッセージ用ボックス */
+        .key-message-box {
+            background-color: #ecfdf5; /* emerald-50 */
+            border-left: 4px solid #10b981; /* emerald-500 */
+            padding: 1rem 1.5rem;
+            margin-top: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-radius: 0 8px 8px 0;
+        }
+         .key-message-box p {
+             color: #065f46; /* emerald-800 */
+             font-weight: 500;
+             margin-bottom: 0.5rem;
+         }
+         .key-message-box p:last-child {
+             margin-bottom: 0;
+         }
+         /* コールトゥアクション */
+         .cta-box {
+             background-color: #f0f9ff; /* sky-50 */
+             border: 1px solid #bae6fd; /* sky-200 */
+             padding: 1.5rem 2rem;
+             margin-top: 2rem;
+             border-radius: 8px;
+             text-align: center;
+         }
+         .cta-box h3 {
+             color: #0369a1; /* sky-700 */
+             font-weight: 600;
+             margin-bottom: 1rem;
+         }
 
     </style>
 </head>
-<body>
+ 
+<body class="bg-gradient-to-br from-gray-100 to-gray-200 font-sans"> 
 
-    <div class="container">
-        <h1>臨床試験における<span class="tooltip" data-tooltip="Quality Management System: 品質を管理するための組織的な仕組み">QMS</span>、<span class="tooltip" data-tooltip="Quality by Design: 計画段階から品質を作り込むという考え方">QbD</span>と<span class="tooltip" data-tooltip="Risk-Based Approach: リスクに基づいてアプローチやリソース配分を決定する手法">RBA</span>、<span class="tooltip" data-tooltip="Quality Tolerance Limits: 事前に定めた品質の許容限界値">QTLs</span>、ステークホルダーエンゲージメントの関係性</h1>
+    
+    <div id="main-content" class="container max-w-5xl mx-auto my-10 p-6 sm:p-10 bg-white rounded-lg shadow-lg"> 
 
-        <div class="context-box">
-            <p><strong>背景：</strong> この文書は、臨床試験および臨床研究における<strong><span class="tooltip" data-tooltip="Quality Management System: 品質を管理するための組織的な仕組み">QMS</span>実装</strong>と<strong><span class="tooltip" data-tooltip="Quality by Design: 計画段階から品質を作り込むという考え方">QbD</span>活用</strong>というより大きな文脈において、<strong><span class="tooltip" data-tooltip="Risk-Based Approach: リスクに基づいてアプローチやリソース配分を決定する手法">リスク・ベースド・アプローチ（RBA）</span></strong>、<strong><span class="tooltip" data-tooltip="Quality Tolerance Limits: 事前に定めた品質の許容限界値">品質許容限界（QTLs）</span></strong>、そして<strong><span class="tooltip" data-tooltip="Stakeholder Engagement: 患者、研究者、依頼者など、臨床試験に関わる様々な利害関係者の関与。Patient and Public Involvement (PPI)も含む概念。">ステークホルダー・エンゲージメント</span>（<span class="tooltip" data-tooltip="Patient and Public Involvement: 研究プロセスに患者や市民が参画すること">PPI</span>を含む）</strong>の重要性と相互関係について解説します。</p>
+        
+        <h1 class="text-2xl sm:text-3xl font-bold text-cyan-900 mb-4 text-center"> 
+             未来の臨床試験品質をデザインする
+        </h1>
+        <p class="text-lg sm:text-xl text-center text-cyan-700 mb-8 pb-4 border-b-4 border-cyan-700">
+            QMS・QbD・RBA・QTLs・PPI 活用術
+        </p>
+
+        
+        <div id="speech-controls" class="text-center my-6 space-x-4">
+            <button id="read-button" class="bg-cyan-600 hover:bg-cyan-700 text-white font-semibold py-2 px-4 rounded-md shadow transition-colors duration-200 inline-flex items-center">
+                <img src="https://unpkg.com/lucide-static@latest/icons/volume-2.svg" alt="Read Icon" class="button-icon filter invert"> 
+                読み上げ開始
+            </button>
+            <button id="stop-button" class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-md shadow transition-colors duration-200 hidden inline-flex items-center">
+                 <img src="https://unpkg.com/lucide-static@latest/icons/square.svg" alt="Stop Icon" class="button-icon filter invert"> 
+                読み上げ停止
+            </button>
+            <p id="speech-status" class="text-sm text-gray-500 mt-2"></p> 
         </div>
-<div class="collapsible-section">
-    <div class="collapsible-header">
-        <h2>ICHR2の目的と意義</h2>
-        <span class="toggle-icon">+</span>
-    </div>
-    <div class="collapsible-content">
-        <h3>ICHR2の目的</h3>
-        <ul>
-            <li>臨床試験の規模と複雑性の増大、技術の進歩、およびリスク管理プロセスの発展に対応するために、医薬品の臨床試験の実施基準（GCP）に関するガイドラインを更新すること。</li>
-        </ul>
-        <h3>ICHR2の意義</h3>
-        <ul>
-            <li>被験者の保護と治験結果の信頼性を確保しつつ、治験のデザイン、実施、監督、記録及び報告の改善と効率化を促進すること。</li>
-            <li>品質管理及び品質保証を包括する概念として品質マネジメントシステム（QMS）の導入を奨励し、治験の計画段階からの効率的かつ革新的な品質確保を目指すこと。</li>
-            <li>リスクに基づくアプローチ（Risk-Based Approach）を導入し、重要な活動に重点的に取り組むことで、モニタリングを含む治験プロセス全体の効率性と質を高めること。</li>
-            <li>電子的記録や必須文書に関する基準を改訂し、治験の品質と効率の向上を図ること。</li>
-            <li>より広範な地域における治験データの相互受け入れを促進するための統一基準を提供すること。</li>
-            <li>用語の定義を明確化し、治験責任医師及び実施医療機関の責任を明確化すること。</li>
-        </ul>
-    </div>
-</div>
 
-<div class="collapsible-section">
-    <div class="collapsible-header">
-        <h2>ICH E6(R3)の目的と意義</h2>
-        <span class="toggle-icon">+</span>
-    </div>
-    <div class="collapsible-content">
-        <h3>ICH E6(R3)の目的</h3>
-        <ul>
-            <li>臨床試験の品質、安全性、倫理性、信頼性を向上させること。これは、技術革新（例：電子健康記録、ウェアラブルデバイス）やリスクベースのアプローチに対応し、多様な試験デザインやデータソースに柔軟に対応することを目的としています。</li>
-        </ul>
-        <h3>ICH E6(R3)の意義</h3>
-        <ul>
-            <li>試験参加者の権利、安全性、福祉の保護を強化するとともに、臨床試験データの信頼性と完全性を確保します。</li>
-            <li>国際的な臨床試験の基準を統一することで、ICH加盟国・地域における臨床試験の調和を図り、国際的な共同開発を促進することを目的としています。</li>
-        </ul>
-    </div>
-</div>
-        <h2>はじめに</h2>
-        <p>臨床試験や臨床研究の質と信頼性を確保するためには、体系的な<span class="tooltip" data-tooltip="Quality Management System: 品質を管理するための組織的な仕組み">QMS</span>の導入と、計画段階から品質を組み込む<span class="tooltip" data-tooltip="Quality by Design: 計画段階から品質を作り込むという考え方">QbD</span>のアプローチが不可欠です。これらの実現において、<span class="tooltip" data-tooltip="Risk-Based Approach: リスクに基づいてアプローチやリソース配分を決定する手法">RBA</span>、<span class="tooltip" data-tooltip="Quality Tolerance Limits: 事前に定めた品質の許容限界値">QTLs</span>、そして患者を含むステークホルダーとの積極的な関与（ステークホルダー・エンゲージメント/<span class="tooltip" data-tooltip="Patient and Public Involvement: 研究プロセスに患者や市民が参画すること">PPI</span>）は、それぞれが重要な役割を果たし、相互に連携しています。</p>
-        <p>本稿では、提供された情報に基づき、これらの概念が<span class="tooltip" data-tooltip="Quality Management System: 品質を管理するための組織的な仕組み">QMS</span>実装と<span class="tooltip" data-tooltip="Quality by Design: 計画段階から品質を作り込むという考え方">QbD</span>活用の文脈でどのように位置づけられ、臨床試験の品質向上にどう貢献するのかを、インタラクティブな機能を用いて解説します。</p>
-
-        <div class="collapsible-section">
-            <div class="collapsible-header">
-                <h2><span class="tooltip" data-tooltip="Risk-Based Approach: リスクに基づいてアプローチやリソース配分を決定する手法">リスク・ベースド・アプローチ (RBA)</span> について</h2>
-                <span class="toggle-icon">+</span>
-            </div>
-            <div class="collapsible-content">
-                 
-                 <div class="section-top-flex">
-                     <div class="section-intro-text">
-                         <p>臨床試験におけるRBAは、試験の品質と参加者の安全性を確保するための中核的な原則です。従来の画一的なアプローチから脱却し、<strong>重要な事項（Criticality、Essentiality）に焦点を当てて考える「考えさせる<span class="tooltip" data-tooltip="Good Clinical Practice: 医薬品の臨床試験の実施に関する基準">GCP</span>」への変革</strong>において不可欠な要素と位置づけられています。</p>
-                     </div>
+        
+        <section class="mt-10">
+            <h2 class="text-2xl sm:text-3xl font-semibold text-red-700 mt-12 mb-6 pb-2 border-b border-red-200 text-center">
+                 <img src="https://unpkg.com/lucide-static@latest/icons/alert-triangle.svg" alt="Challenge Icon" class="heading-icon text-red-700">
+                 なぜ今、臨床試験の「質」への取り組みが重要なのか？
+            </h2>
+            <div class="text-gray-800 text-base sm:text-lg leading-relaxed space-y-6">
+                <p>皆さん、日々の臨床試験業務お疲れ様です。近年、私たちの開発環境は、試験デザインの複雑化、<span class="tooltip" data-tooltip="Decentralized Clinical Trials: 分散型臨床試験">DCT</span>などの新しい手法の導入、そしてICH E6(R3)に見られるような規制当局からの品質に対する期待の高まりなど、大きな変化に直面しています。</p>
+                <p>従来の画一的なアプローチだけでは、これらの変化に対応し、真に質の高い、効率的な臨床試験を実施することが難しくなってきています。患者さんの安全性を確保し、信頼性の高いデータを取得し、最終的に価値ある医薬品を一日でも早く届けるためには、<strong>計画段階から品質を戦略的にデザインし、リスクを賢く管理する</strong>ことが不可欠です。</p>
+                 <div class="key-message-box">
+                     <p>本日のテーマは、これらの課題に対応し、私たちの臨床試験を成功に導くための強力なツールセット：<span class="tooltip" data-tooltip="Quality Management System: 品質を管理するための組織的な仕組み">QMS</span>、<span class="tooltip" data-tooltip="Quality by Design: 計画段階から品質を作り込むという考え方">QbD</span>、<span class="tooltip" data-tooltip="Risk-Based Approach: リスクに基づいてアプローチやリソース配分を決定する手法">RBA</span>、<span class="tooltip" data-tooltip="Quality Tolerance Limits: 事前に定めた品質の許容限界値">QTLs</span>、そして<span class="tooltip" data-tooltip="Stakeholder Engagement: 患者、研究者、依頼者など、臨床試験に関わる様々な利害関係者の関与。Patient and Public Involvement (PPI)も含む概念。">ステークホルダーエンゲージメント</span>（<span class="tooltip" data-tooltip="Patient and Public Involvement: 研究プロセスに患者や市民が参画すること">PPI</span>）の活用についてです。</p>
                  </div>
-                 
-                 <h3>RBAの基本的な考え方と目的</h3>
-                 <ul>
-                     <li>臨床試験に関連するリスクを<strong>特定、評価、管理</strong>し、最も重要なリスクに優先的に対処します。</li>
-                     <li>すべてのリスクに均等にリソースを割くのではなく、<strong>参加者の安全性や試験結果の信頼性に影響を与える可能性の高いリスク</strong>に焦点を当て、効率的かつ効果的な品質管理を目指します。</li>
-                     <li><strong>「治験における品質マネジメントに関する基本的考え方について」</strong>（厚生労働省通知）でもRBAを利用した品質マネジメントの実施が明記されており、規制当局の期待としても重要です。</li>
-                     <li>リスクに基づいてモニタリング計画を立てることが求められます。</li>
-                 </ul>
-
-                 <h3><span class="tooltip" data-tooltip="Quality Management System: 品質を管理するための組織的な仕組み">QMS</span>におけるRBAの位置づけ</h3>
-                 <ul>
-                     <li>RBAは、臨床試験における<strong><span class="tooltip" data-tooltip="Quality Management System: 品質を管理するための組織的な仕組み">品質マネジメントシステム（QMS）</span>の重要な構成要素</strong>です。</li>
-                     <li><span class="tooltip" data-tooltip="Quality Management System: 品質を管理するための組織的な仕組み">QMS</span>の枠組みの中で、リスクを特定し管理するための具体的な手法を提供します。</li>
-                     <li>品質管理活動計画にRBAを組み込むことが重要であり、<strong><span class="tooltip" data-tooltip="Plan-Do-Check-Act cycle: 品質改善などの活動を管理するためのフレームワーク">PDCAサイクル</span></strong>の計画（Plan）段階からリスクに基づく取り組みを開始し、チェック（Check）段階でリスク指標（<span class="tooltip" data-tooltip="Risk Indicator: リスクの発生可能性や影響度を示す指標">Risk Indicator</span>）や<span class="tooltip" data-tooltip="Quality Tolerance Limits: 事前に定めた品質の許容限界値">品質許容限界（QTL）</span>を用いてリスクの顕在化を確認します。</li>
-                 </ul>
-
-                 <h3>試験デザインにおける<span class="tooltip" data-tooltip="Quality by Design: 計画段階から品質を作り込むという考え方">QbD</span>とRBAの関連</h3>
-                 <ul>
-                     <li><strong><span class="tooltip" data-tooltip="Quality by Design: 計画段階から品質を作り込むという考え方">Quality by Design (QbD)</span></strong>は、計画段階から品質を設計に組み込む概念です。</li>
-                     <li>RBAは、<span class="tooltip" data-tooltip="Quality by Design: 計画段階から品質を作り込むという考え方">QbD</span>プロセスにおいて、品質に影響を与える可能性のある要因（<strong><span class="tooltip" data-tooltip="Critical to Quality Factors: 試験の品質にとって極めて重要な要因">CTQ要因</span></strong>）を特定し、それに関連するリスクを評価・管理するための重要なツールとなります。</li>
-                     <li><span class="tooltip" data-tooltip="Critical to Quality Factors: 試験の品質にとって極めて重要な要因">CTQ要因</span>は試験の目的達成や信頼性に直結する重要な属性であり、<strong>リスクの上位概念</strong>とされています。RBAでは、これらの<span class="tooltip" data-tooltip="Critical to Quality Factors: 試験の品質にとって極めて重要な要因">CTQ要因</span>が損なわれるリスクを評価し、軽減策を講じます。</li>
-                 </ul>
-
-                 <h3>臨床試験実施段階でのRBA適用</h3>
-                 <ul>
-                     <li><strong>モニタリング：</strong> リスク評価に基づき、範囲、頻度、方法（オンサイト、オフサイト、セントラルモニタリング）を決定する<strong>リスクベースのモニタリング (<span class="tooltip" data-tooltip="Risk-Based Monitoring: リスク評価に基づいてモニタリング活動を計画・実施する手法">RBM</span>)</strong>が重要です。</li>
-                     <li><strong>データマネジメント：</strong> データの重要度やリスクに応じて、データ収集方法、システム設計、データクリーニング等を設定し、<strong><span class="tooltip" data-tooltip="Data Integrity: データが完全で、一貫性があり、正確であること">データインテグリティ</span></strong>を確保します。</li>
-                     <li><strong>監査：</strong> リスクの高い組織やプロトコルを優先的に監査対象とすることで、限られたリソースで効果的な品質保証活動を行います。</li>
-                 </ul>
-
-                 <h3><span class="tooltip" data-tooltip="International Council for Harmonisation of Technical Requirements for Pharmaceuticals for Human Use: 医薬品規制調和国際会議. E6(R3)はGCPガイドラインの改訂版案">ICH E6(R3)</span>におけるRBAの強調</h3>
-                 <ul>
-                     <li>最新の<strong><span class="tooltip" data-tooltip="International Council for Harmonisation of Technical Requirements for Pharmaceuticals for Human Use: 医薬品規制調和国際会議. E6(R3)はGCPガイドラインの改訂版案">ICH E6(R3)</span>ガイドライン</strong>では、RBAが一層強調され、<span class="tooltip" data-tooltip="Quality by Design: 計画段階から品質を作り込むという考え方">QbD</span>と<span class="tooltip" data-tooltip="Quality Management System: 品質を管理するための組織的な仕組み">QMS</span>に重点が置かれています。</li>
-                     <li>リスクベースの監視とデータ管理が主要な品質管理活動として挙げられ、スポンサーのリスク比例プロセスなどステークホルダーの責任も強化されています。</li>
-                 </ul>
-
-                 <h3>RBA導入の課題と今後の展望</h3>
-                 <ul>
-                     <li>RBAの実装には、関係者の<strong>理解深化や組織内での議論・合意形成</strong>が必要です。</li>
-                     <li>「チェックリストとしての<span class="tooltip" data-tooltip="Good Clinical Practice: 医薬品の臨床試験の実施に関する基準">GCP</span>」のマインドセットから脱却し、「本当に重要なことは何か？」を考える<strong>文化の醸成</strong>が不可欠です。</li>
-                     <li><span class="tooltip" data-tooltip="International Council for Harmonisation of Technical Requirements for Pharmaceuticals for Human Use: 医薬品規制調和国際会議. E6(R3)はGCPガイドラインの改訂版案">ICH E6(R3)</span>の施行に伴い、RBAは標準的なアプローチとして普及が進むと考えられます。</li>
-                 </ul>
+                 <p>これらの概念を理解し、連携させて活用することで、皆さんの日々の業務における課題解決や、より質の高い臨床試験の実現に繋がるはずです。「自分たちの業務にどう活かせるか？」という視点で、ぜひ一緒に考えていきましょう。</p>
             </div>
-        </div>
+        </section>
 
-        <div class="collapsible-section">
-            <div class="collapsible-header">
-                 <h2><span class="tooltip" data-tooltip="Quality Tolerance Limits: 事前に定めた品質の許容限界値">品質許容限界 (QTLs)</span> について</h2>
-                 <span class="toggle-icon">+</span>
-            </div>
-            <div class="collapsible-content">
+
+        
+        <section class="mt-12 pt-6 border-t border-gray-200">
+             <h2 class="text-2xl sm:text-3xl font-semibold text-cyan-800 mb-6 pb-2 border-b border-gray-300">
+                 <img src="https://unpkg.com/lucide-static@latest/icons/link-2.svg" alt="Relationship Icon" class="heading-icon">
+                 全体像：各アプローチの連携プレー
+             </h2>
+             <div class="text-gray-800 text-base sm:text-lg leading-relaxed space-y-6"> 
+                 <p>まず、これらのアプローチがどのように連携して機能するのか、全体像を掴みましょう。これらは個別のツールではなく、一つの目的に向かうチームのようなものです。</p>
+                 <div class="ml-4"> 
+                     <ul class="custom-list space-y-4 pl-4 mt-4">
+                         <li><strong class="text-lg block mb-1"><span class="tooltip" data-tooltip="Quality Management System: 品質を管理するための組織的な仕組み">QMS (品質マネジメントシステム)</span> - 土台となるルールブック</strong><br>試験全体の品質を管理するための組織的な枠組み。私たちの活動すべてを支える基盤です。</li>
+                         <li><strong class="text-lg block mb-1"><span class="tooltip" data-tooltip="Quality by Design: 計画段階から品質を作り込むという考え方">QbD (クオリティ・バイ・デザイン)</span> - 成功への設計図</strong><br>計画段階で「何が重要か(<span class="tooltip" data-tooltip="Critical to Quality Factors: 試験の品質にとって極めて重要な要因">CTQ要因</span>)」を見極め、品質を作り込む設計思想。</li>
+                         <li><strong class="text-lg block mb-1"><span class="tooltip" data-tooltip="Stakeholder Engagement: 患者、研究者、依頼者など、臨床試験に関わる様々な利害関係者の関与。Patient and Public Involvement (PPI)も含む概念。">ステークホルダーエンゲージメント (PPIを含む)</span> - みんなの知恵を結集</strong><br>患者さんや現場の意見を取り入れ、より現実的で質の高い計画やリスク管理を実現。</li>
+                         <li><strong class="text-lg block mb-1"><span class="tooltip" data-tooltip="Risk-Based Approach: リスクに基づいてアプローチやリソース配分を決定する手法">RBA (リスク・ベースド・アプローチ)</span> - 賢いリソース配分</strong><br><span class="tooltip" data-tooltip="Quality by Design: 計画段階から品質を作り込むという考え方">QbD</span>で見えた重要点に対するリスクを評価し、重要な箇所に注力する戦略。</li>
+                         <li><strong class="text-lg block mb-1"><span class="tooltip" data-tooltip="Quality Tolerance Limits: 事前に定めた品質の許容限界値">QTLs (品質許容限界)</span> - 品質のアラートシステム</strong><br><span class="tooltip" data-tooltip="Risk-Based Approach: リスクに基づいてアプローチやリソース配分を決定する手法">RBA</span>で特定した重要リスクの許容範囲を示す具体的な指標。逸脱は品質問題の早期発見のサイン。</li>
+                     </ul>
+                 </div>
+                 <p class="mt-6 font-semibold text-cyan-700">つまり、QMSという土台の上で、QbDとステークホルダーの声で「勝てる設計図」を作り、RBAとQTLsで「賢く守り、異常を検知する」という連携プレーで、臨床試験の品質を高めていくのです。</p>
+             </div>
+        </section>
+
+        
+        <section class="mt-16 pt-8 border-t-2 border-cyan-100"> 
+            <h2 class="text-2xl sm:text-3xl font-semibold text-cyan-800 mb-6 pb-2 border-b border-gray-300">
+                <img src="https://unpkg.com/lucide-static@latest/icons/shield-alert.svg" alt="RBA Icon" class="heading-icon"> 
+                <span class="tooltip" data-tooltip="Risk-Based Approach: リスクに基づいてアプローチやリソース配分を決定する手法">リスク・ベースド・アプローチ (RBA)</span> - どこに注力すべきか？
+            </h2>
+            
+            <img src="RBA.jpg" alt="リスク・ベースド・アプローチの概念図" class="rounded-lg shadow-md my-6 mx-auto block max-w-md sm:max-w-lg border border-gray-200 hover:scale-105 transition-transform duration-200 ease-in-out cursor-pointer"> 
+            <div class="text-gray-800 text-base sm:text-lg leading-relaxed space-y-6 mt-8"> 
+                <p>「全てを完璧に」は理想ですが、現実的ではありません。RBAは、限られたリソース（時間、人、予算）を、<strong>本当に重要なリスク</strong>に集中させるための考え方です。</p>
+
+                <h3 class="text-xl sm:text-2xl font-semibold text-cyan-700 mt-10 mb-4 pt-4 border-t border-gray-200">なぜ RBA が皆さんの業務に役立つのか？</h3>
+                 <div class="ml-4"> 
+                    <ul class="custom-list space-y-4 pl-4">
+                        <li><strong>業務の効率化:</strong> 全てのリスクに同じ労力をかけるのではなく、影響の大きいリスクに焦点を当てることで、モニタリングやデータチェックの負担を軽減できます。</li>
+                        <li><strong>品質向上への集中:</strong> 患者さんの安全性やデータの信頼性に直結するリスクへの対策を強化することで、試験全体の質を高めます。</li>
+                        <li><strong>「考えさせるGCP」の実践:</strong> チェックリスト的な作業から脱却し、「この試験で本当に重要なことは何か？」を常に考える文化を醸成します。</li>
+                    </ul>
+                 </div>
                 
-                <div class="section-top-flex">
-                    <div class="section-intro-text">
-                        <p><span class="tooltip" data-tooltip="Quality Tolerance Limits: 事前に定めた品質の許容限界値">QTLs</span>は、臨床試験の<span class="tooltip" data-tooltip="Quality Management System: 品質を管理するための組織的な仕組み">QMS</span>における重要な要素であり、<span class="tooltip" data-tooltip="Risk-Based Approach: リスクに基づいてアプローチやリソース配分を決定する手法">RBA</span>を実践し、品質と安全性を確保するための具体的な指標として機能します。</p>
+                <h3 class="text-xl sm:text-2xl font-semibold text-cyan-700 mt-10 mb-4 pt-4 border-t border-gray-200">RBAの基本的な考え方と目的</h3>
+                <div class="ml-4"> 
+                    <ul class="custom-list space-y-4 pl-4">
+                        <li>臨床試験に関連するリスクを<strong>特定、評価、管理</strong>し、最も重要なリスクに優先的に対処します。</li>
+                        <li>すべてのリスクに均等にリソースを割くのではなく、<strong>参加者の安全性や試験結果の信頼性に影響を与える可能性の高いリスク</strong>に焦点を当て、効率的かつ効果的な品質管理を目指します。</li>
+                        <li><strong>「治験における品質マネジメントに関する基本的考え方について」</strong>（厚生労働省通知）でもRBAを利用した品質マネジメントの実施が明記されており、規制当局の期待としても重要です。</li>
+                        <li>リスクに基づいてモニタリング計画を立てることが求められます。</li>
+                    </ul>
+                     <div class="example-box">
+                        <p><strong>皆さんの業務での活用イメージ：</strong></p>
+                        <p>次の試験計画時、チームで「この試験で失敗するとしたら、最も致命的な要因は何か？（<span class="tooltip" data-tooltip="Critical to Quality Factors: 試験の品質にとって極めて重要な要因">CTQ要因</span>）」を議論し、それに関連するリスク（例：評価の一貫性、被験薬の適切な投与、重要な安全性情報の収集漏れなど）を洗い出します。そして、そのリスクの発生可能性と影響度を評価し、「特に重点的に管理・監視すべきリスク」を特定します。その上で、モニタリング計画（頻度、方法）やデータマネジメント計画を具体化していきます。</p>
                     </div>
                 </div>
 
-                <h3>QTLsの基本的な定義と目的</h3>
-                <ul>
-                    <li><strong>「事前に定める品質の許容可能な限界値」</strong>（閾値）と定義されます。一般的には、<span class="tooltip" data-tooltip="Quality Tolerance Limits: 事前に定めた品質の許容限界値">QTL</span>のパラメータ（監視対象の変数）と閾値を合わせて「<span class="tooltip" data-tooltip="Quality Tolerance Limits: 事前に定めた品質の許容限界値">QTLs</span>」と表現されます。</li>
-                    <li>目的は、逸脱が発生した場合に、<strong>参加者の安全性や試験結果の信頼性に影響を及ぼす可能性のある体系的な問題</strong>を特定し、低減措置の必要性を検討するプロセスを確立することです。</li>
-                </ul>
-
-                <h3><span class="tooltip" data-tooltip="Key Risk Indicator: 主要なリスクの発生や変化を示す先行指標または遅行指標">KRI</span>（Key Risk Indicator）との違い</h3>
-                <p><span class="tooltip" data-tooltip="Quality Tolerance Limits: 事前に定めた品質の許容限界値">QTL</span>のパラメータと<span class="tooltip" data-tooltip="Key Risk Indicator: 主要なリスクの発生や変化を示す先行指標または遅行指標">KRI</span>は混同されやすいですが、以下の点で異なります。</p>
-                <ul>
-                    <li><strong><span class="tooltip" data-tooltip="Quality Tolerance Limits: 事前に定めた品質の許容限界値">QTL</span>のパラメータ：</strong> 試験レベルで評価。対象は被験者の安全性・試験結果の信頼性に影響するリスク。閾値超過は「体系的問題の評価」のきっかけ。個数は少ない（1～5個程度）。総括報告書への記載が必要。</li>
-                    <li><strong><span class="tooltip" data-tooltip="Key Risk Indicator: 主要なリスクの発生や変化を示す先行指標または遅行指標">KRI</span>：</strong> 試験レベル以外（被験者・施設・国レベル等）でも評価。対象は潜在的な問題（安全性等に直接影響しないものも含む）。閾値超過は「軽減すべき潜在的問題検出のための行動」のきっかけ。個数は多い（10～25個程度）。総括報告書への記載は不要。</li>
-                </ul>
-                <p><span class="tooltip" data-tooltip="Quality Tolerance Limits: 事前に定めた品質の許容限界値">QTLs</span>はより重要なリスク監視に焦点を当て、閾値超過はより慎重な対応を要します。</p>
-
-                <h3><span class="tooltip" data-tooltip="Critical to Quality Factors: 試験の品質にとって極めて重要な要因">CTQ要因</span>（質に関する重要な要因）との関連性</h3>
-                <ul>
-                    <li><strong><span class="tooltip" data-tooltip="Critical to Quality Factors: 試験の品質にとって極めて重要な要因">CTQ要因</span></strong>は「参加者の保護、試験結果の信頼性と解釈の可能性及び試験結果に基づく意思決定の根本となる試験の特性あるいは性能」です。</li>
-                    <li><span class="tooltip" data-tooltip="Critical to Quality Factors: 試験の品質にとって極めて重要な要因">CTQ要因</span>は<span class="tooltip" data-tooltip="Quality Tolerance Limits: 事前に定めた品質の許容限界値">QTLs</span>の検討の前、もしくは並行して検討されます（試験実施計画の検討時に<span class="tooltip" data-tooltip="Critical to Quality Factors: 試験の品質にとって極めて重要な要因">CTQ要因</span>が検討されるため）。</li>
-                    <li><span class="tooltip" data-tooltip="Critical to Quality Factors: 試験の品質にとって極めて重要な要因">CTQ要因</span>をもとに<span class="tooltip" data-tooltip="Quality Tolerance Limits: 事前に定めた品質の許容限界値">QTLs</span>を検討することが推奨され、リスク評価（影響度、発生頻度、検出可能性）に基づいて最もリスクが高い<span class="tooltip" data-tooltip="Critical to Quality Factors: 試験の品質にとって極めて重要な要因">CTQ要因</span>に対して設定する方法や、各<span class="tooltip" data-tooltip="Critical to Quality Factors: 試験の品質にとって極めて重要な要因">CTQ要因</span>に対して設定を検討する方法があります。</li>
-                </ul>
-
-                <h3>品質方針・品質目標との関連性</h3>
-                <ul>
-                    <li><span class="tooltip" data-tooltip="Quality Tolerance Limits: 事前に定めた品質の許容限界値">QTLs</span>は、<span class="tooltip" data-tooltip="International Organization for Standardization: 国際標準化機構。ISO 9000は品質マネジメントシステムの規格群">ISO 9000</span>における品質方針・品質目標と同様の事項（整合性、測定可能性、要求事項考慮、適合・満足度への寄与、監視可能性、伝達可能性、見直し）を満たすと考えられます。</li>
-                    <li>品質方針・品質目標達成のための具体的な基準となり、客観的事実に基づく意思決定や改善活動の原動力となります。</li>
-                    <li>ただし、品質目標には試験終了時期など安全性や信頼性に関係しない項目も含まれ得ますが、<span class="tooltip" data-tooltip="Quality Tolerance Limits: 事前に定めた品質の許容限界値">QTLs</span>は主に安全性・信頼性に焦点を当てます。</li>
-                    <li><span class="tooltip" data-tooltip="Critical to Quality Factors: 試験の品質にとって極めて重要な要因">CTQ要因</span>、<span class="tooltip" data-tooltip="Quality Tolerance Limits: 事前に定めた品質の許容限界値">QTLs</span>、<span class="tooltip" data-tooltip="Key Risk Indicator: 主要なリスクの発生や変化を示す先行指標または遅行指標">KRI</span>、品質方針、品質目標は階層的に関連し、品質マネジメントを構成します。</li>
-                </ul>
-
-                <h3>QTLsの導入状況</h3>
-                <ul>
-                    <li>アンケート調査によると、<span class="tooltip" data-tooltip="Quality Tolerance Limits: 事前に定めた品質の許容限界値">QTLs</span>の設定率は10～27%にとどまり、導入が進んでいない現状があります。</li>
-                    <li>理由として、設定目的や方法の理解不足が指摘されています。</li>
-                </ul>
-
-                <h3>QTLsの決定方法と検討事項</h3>
-                <ul>
-                    <li><strong>検討時期：</strong> 試験実施計画書のDraft検討開始からVer 1.0固定まで、遅くとも最初の試験参加者来院までに固定することが望ましいです（データ収集前の期待値設定）。</li>
-                    <li><strong>検討体制：</strong> 臨床、現場、生物統計、データマネジメント、セントラルモニタリング、メディカルモニタリング、メディカルライティング等の<strong>職種横断的な実施</strong>が推奨されます。最終決定者は品質マネジメント責任者が担うのが良いでしょう。</li>
-                    <li><strong>考慮事項：</strong>
-                        <ul>
-                            <li><strong>他試験情報の活用：</strong> 類似試験情報を参考にできるが、試験特性の違いやバイアスに注意。</li>
-                            <li><strong>算出と監視の容易さ：</strong> 算出・監視しやすいパラメータを選定。データ取得の難易度や算出の複雑さ、データ入力の影響も考慮。</li>
-                            <li><strong>試験規模・登録スピード・参加期間：</strong> 小規模試験、登録が速い試験、参加期間が短い試験では、<span class="tooltip" data-tooltip="Quality Tolerance Limits: 事前に定めた品質の許容限界値">QTLs</span>の選択や逸脱時のアクションに工夫が必要。</li>
-                        </ul>
-                    </li>
-                </ul>
-
-                <h3>QTLsの具体例</h3>
-                <blockquote>
-                    <p>無増悪生存期間 (<span class="tooltip" data-tooltip="Progression-Free Survival: がんなどの治療で、病状が進行せず安定している期間">PFS</span>) を主要評価項目とする試験において:</p>
-                    <ul>
-                        <li><strong><span class="tooltip" data-tooltip="Critical to Quality Factors: 試験の品質にとって極めて重要な要因">CTQ要因</span>：</strong> 病勢進行判定のための重要なデータ（腫瘍評価のための来院時の検体収集など）が収集されること。</li>
-                        <li><strong><span class="tooltip" data-tooltip="Quality Tolerance Limits: 事前に定めた品質の許容限界値">QTLs</span>パラメータ：</strong> 「腫瘍評価の欠測または評価不能となった被験者の割合」。</li>
-                        <li><strong><span class="tooltip" data-tooltip="Quality Tolerance Limits: 事前に定めた品質の許容限界値">QTLs</span>閾値：</strong> 「少なくとも1日、腫瘍評価の欠測または評価不能があった1試験参加者の割合」。</li>
-                        <li><strong><span class="tooltip" data-tooltip="Key Risk Indicator: 主要なリスクの発生や変化を示す先行指標または遅行指標">KRI</span>の例：</strong> 「連続2回以上、腫瘍評価の欠測または1評価不能となった被験者の割合」。</li>
-                    </ul>
-                    <p>この例は、<span class="tooltip" data-tooltip="Critical to Quality Factors: 試験の品質にとって極めて重要な要因">CTQ要因</span>が損なわれるリスク（評価欠測）を監視するため、試験レベルの<span class="tooltip" data-tooltip="Quality Tolerance Limits: 事前に定めた品質の許容限界値">QTLs</span>と、より早期の兆候を捉える<span class="tooltip" data-tooltip="Key Risk Indicator: 主要なリスクの発生や変化を示す先行指標または遅行指標">KRI</span>が設定されていることを示します。</p>
-                </blockquote>
-
-                <h3><span class="tooltip" data-tooltip="Risk-Based Approach: リスクに基づいてアプローチやリソース配分を決定する手法">RBA</span>におけるQTLsの役割</h3>
-                <ul>
-                    <li><span class="tooltip" data-tooltip="Quality Tolerance Limits: 事前に定めた品質の許容限界値">QTLs</span>は、<span class="tooltip" data-tooltip="Risk-Based Approach: リスクに基づいてアプローチやリソース配分を決定する手法">RBA</span>において特定・評価されたリスクのうち、特に<strong>重要なリスクを監視するための具体的な閾値</strong>を提供します。</li>
-                    <li>リスクが顕在化した場合の対策をあらかじめ検討し、<span class="tooltip" data-tooltip="Quality Tolerance Limits: 事前に定めた品質の許容限界値">QTLs</span>を<strong>対策実行のトリガーや閾値</strong>として設定し、監視します。</li>
-                    <li>品質の逸脱を早期に警告し、適切な是正措置を可能にすることで、試験の信頼性と安全性を維持します。</li>
-                </ul>
-
-                <h3><span class="tooltip" data-tooltip="International Council for Harmonisation of Technical Requirements for Pharmaceuticals for Human Use: 医薬品規制調和国際会議. E6(R3)はGCPガイドラインの改訂版案">ICH E6(R3)</span>におけるQTLsの強調</h3>
-                <ul>
-                    <li><span class="tooltip" data-tooltip="International Council for Harmonisation of Technical Requirements for Pharmaceuticals for Human Use: 医薬品規制調和国際会議. E6(R3)はGCPガイドラインの改訂版案">ICH E6(R3)</span>は<span class="tooltip" data-tooltip="Quality by Design: 計画段階から品質を作り込むという考え方">QbD</span>と<span class="tooltip" data-tooltip="Quality Management System: 品質を管理するための組織的な仕組み">QMS</span>を重視しており、<span class="tooltip" data-tooltip="Quality Tolerance Limits: 事前に定めた品質の許容限界値">QTLs</span>を含む<span class="tooltip" data-tooltip="Risk-Based Approach: リスクに基づいてアプローチやリソース配分を決定する手法">RBA</span>の考え方が最新の<span class="tooltip" data-tooltip="Good Clinical Practice: 医薬品の臨床試験の実施に関する基準">GCP</span>ガイドラインの中心原則であることを示しています。</li>
-                </ul>
-
-                <h3>QTLs導入の課題と今後の展望</h3>
-                <ul>
-                    <li>導入の課題は設定目的・方法の理解不足などがあります。関係者の理解促進、職種横断的協働、事例共有が重要です。</li>
-                    <li><span class="tooltip" data-tooltip="International Council for Harmonisation of Technical Requirements for Pharmaceuticals for Human Use: 医薬品規制調和国際会議. E6(R3)はGCPガイドラインの改訂版案">ICH E6(R3)</span>の浸透とともに、標準的な品質管理指標としての活用拡大が期待されます。各組織でのノウハウ蓄積が必要です。</li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="collapsible-section">
-            <div class="collapsible-header">
-                <h2><span class="tooltip" data-tooltip="Stakeholder Engagement: 患者、研究者、依頼者など、臨床試験に関わる様々な利害関係者の関与。Patient and Public Involvement (PPI)も含む概念。">ステークホルダー・エンゲージメント</span>（<span class="tooltip" data-tooltip="Patient and Public Involvement: 研究プロセスに患者や市民が参画すること">PPI</span>を含む）について</h2>
-                <span class="toggle-icon">+</span>
-            </div>
-            <div class="collapsible-content">
                  
-                 <div class="section-top-flex"> 
-                     <div class="section-intro-text"> 
-                         <p><span class="tooltip" data-tooltip="Quality Management System: 品質を管理するための組織的な仕組み">QMS</span>実装と<span class="tooltip" data-tooltip="Quality by Design: 計画段階から品質を作り込むという考え方">QbD</span>活用において、ステークホルダー・エンゲージメントは、試験の質、倫理性、効率性、そして最終的な成功を左右する不可欠な要素です。</p>
+                
+                <h3 class="text-xl sm:text-2xl font-semibold text-cyan-700 mt-10 mb-4 pt-4 border-t border-gray-200">臨床試験実施段階でのRBA適用</h3>
+                 <div class="ml-4"> 
+                    <ul class="custom-list space-y-4 pl-4">
+                        <li><strong>モニタリング：</strong> リスク評価に基づき、範囲、頻度、方法（オンサイト、オフサイト、セントラルモニタリング）を決定する<strong>リスクベースのモニタリング (<span class="tooltip" data-tooltip="Risk-Based Monitoring: リスク評価に基づいてモニタリング活動を計画・実施する手法">RBM</span>)</strong>が重要です。</li>
+                        <li><strong>データマネジメント：</strong> データの重要度やリスクに応じて、データ収集方法、システム設計、データクリーニング等を設定し、<strong><span class="tooltip" data-tooltip="Data Integrity: データが完全で、一貫性があり、正確であること">データインテグリティ</span></strong>を確保します。</li>
+                        <li><strong>監査：</strong> リスクの高い組織やプロトコルを優先的に監査対象とすることで、限られたリソースで効果的な品質保証活動を行います。</li>
+                    </ul>
+                 </div>
+
+                
+                 <div class="key-message-box">
+                     <p class="font-semibold text-lg mb-2">RBA活用のキーメッセージ</p>
+                     <ul class="key-message-list space-y-2 pl-4">
+                         <li>全ての業務に100%を注ぐのではなく、"重要なこと"に賢くリソースを配分する。</li>
+                         <li>リスク特定・評価プロセスを通じて、試験の弱点を早期に把握できる。</li>
+                         <li>モニタリングやデータマネジメントの効率化に直結する。</li>
+                     </ul>
+                 </div>
+
+                
+                <h3 class="text-xl sm:text-2xl font-semibold text-cyan-700 mt-10 mb-4 pt-4 border-t border-gray-200">RBA導入の課題と今後の展望</h3>
+                 <div class="ml-4"> 
+                    <ul class="custom-list space-y-4 pl-4">
+                        <li>RBAの実装には、関係者の<strong>理解深化や組織内での議論・合意形成</strong>が必要です。</li>
+                        <li>「チェックリストとしての<span class="tooltip" data-tooltip="Good Clinical Practice: 医薬品の臨床試験の実施に関する基準">GCP</span>」のマインドセットから脱却し、「本当に重要なことは何か？」を考える<strong>文化の醸成</strong>が不可欠です。</li>
+                        <li><span class="tooltip" data-tooltip="International Council for Harmonisation of Technical Requirements for Pharmaceuticals for Human Use: 医薬品規制調和国際会議. E6(R3)はGCPガイドラインの改訂版案">ICH E6(R3)</span>の施行に伴い、RBAは標準的なアプローチとして普及が進むと考えられます。</li>
+                    </ul>
+                 </div>
+            </div>
+        </section>
+
+        
+        <section class="mt-16 pt-8 border-t-2 border-cyan-100"> 
+            <h2 class="text-2xl sm:text-3xl font-semibold text-cyan-800 mb-6 pb-2 border-b border-gray-300">
+                <img src="https://unpkg.com/lucide-static@latest/icons/gauge.svg" alt="QTLs Icon" class="heading-icon"> 
+                <span class="tooltip" data-tooltip="Quality Tolerance Limits: 事前に定めた品質の許容限界値">品質許容限界 (QTLs)</span> - 品質低下の早期警告システム
+            </h2>
+            <img src="QTL.jpg" alt="品質許容限界 (QTLs) の概念図" class="rounded-lg shadow-md my-6 mx-auto block max-w-md sm:max-w-lg border border-gray-200 hover:scale-105 transition-transform duration-200 ease-in-out cursor-pointer">
+            <div class="text-gray-800 text-base sm:text-lg leading-relaxed space-y-6 mt-8"> 
+                <p>QTLsは、<span class="tooltip" data-tooltip="Risk-Based Approach: リスクに基づいてアプローチやリソース配分を決定する手法">RBA</span>で特定した特に重要なリスクが、「どの程度までなら許容できるか」を具体的に数値で示したものです。車の速度計のレッドゾーンのように、品質に関する重要な指標が危険水域に入っていないかを監視する仕組みです。</p>
+
+                <h3 class="text-xl sm:text-2xl font-semibold text-cyan-700 mt-10 mb-4 pt-4 border-t border-gray-200">なぜ QTLs が皆さんの業務に役立つのか？</h3>
+                 <div class="ml-4"> 
+                    <ul class="custom-list space-y-4 pl-4">
+                        <li><strong>問題の早期発見:</strong> 試験全体に影響を及ぼす可能性のある体系的な問題を、手遅れになる前に検知できます。</li>
+                        <li><strong>客観的な判断基準:</strong> 「何をもって問題とするか」の基準が明確になり、感覚的な判断ではなく、データに基づいたアクションを促します。</li>
+                        <li><strong>プロアクティブな対応:</strong> 閾値超過時の対応計画を事前に準備しておくことで、問題発生時に迅速かつ適切な対応が可能になります。</li>
+                    </ul>
+                 </div>
+
+                <h3 class="text-xl sm:text-2xl font-semibold text-cyan-700 mt-10 mb-4 pt-4 border-t border-gray-200">QTLsの基本的な定義と目的</h3>
+                 <div class="ml-4"> 
+                    <ul class="custom-list space-y-4 pl-4">
+                        <li><strong>「事前に定める品質の許容可能な限界値」</strong>（閾値）と定義されます。一般的には、<span class="tooltip" data-tooltip="Quality Tolerance Limits: 事前に定めた品質の許容限界値">QTL</span>のパラメータ（監視対象の変数）と閾値を合わせて「<span class="tooltip" data-tooltip="Quality Tolerance Limits: 事前に定めた品質の許容限界値">QTLs</span>」と表現されます。</li>
+                        <li>目的は、逸脱が発生した場合に、<strong>参加者の安全性や試験結果の信頼性に影響を及ぼす可能性のある体系的な問題</strong>を特定し、低減措置の必要性を検討するプロセスを確立することです。</li>
+                    </ul>
+                 </div>
+
+                <h3 class="text-xl sm:text-2xl font-semibold text-cyan-700 mt-10 mb-4 pt-4 border-t border-gray-200"><span class="tooltip" data-tooltip="Key Risk Indicator: 主要なリスクの発生や変化を示す先行指標または遅行指標">KRI</span>（Key Risk Indicator）との違い</h3>
+                 <div class="ml-4"> 
+                    <p><span class="tooltip" data-tooltip="Quality Tolerance Limits: 事前に定めた品質の許容限界値">QTL</span>のパラメータと<span class="tooltip" data-tooltip="Key Risk Indicator: 主要なリスクの発生や変化を示す先行指標または遅行指標">KRI</span>は混同されやすいですが、<strong>QTLsはより重大な、試験全体レベルのリスク</strong>を対象とします。KRIはより広範な（施設レベルなど）潜在的問題の兆候を捉える指標です。</p>
+                    <ul class="custom-list space-y-4 pl-4 mt-4"> 
+                        <li><strong>QTLs:</strong> 試験全体への影響が大きいリスク / 閾値超過は「体系的問題」の可能性 / 事例は少数精鋭 / 総括報告書への記載要</li>
+                        <li><strong>KRI:</strong> 潜在的な問題の兆候 / 閾値超過は「調査・行動」のきっかけ / 事例は多め / 総括報告書への記載不要</li>
+                    </ul>
+                 </div>
+
+                 <h3 class="text-xl sm:text-2xl font-semibold text-cyan-700 mt-10 mb-4 pt-4 border-t border-gray-200">QTLsの具体例</h3>
+                 <div class="ml-4"> 
+                     <div class="example-box">
+                        <p><strong>具体例1 (PFS試験):</strong></p>
+                        <p>主要評価項目が<span class="tooltip" data-tooltip="Progression-Free Survival: がんなどの治療で、病状が進行せず安定している期間">PFS</span>の試験で、<span class="tooltip" data-tooltip="Critical to Quality Factors: 試験の品質にとって極めて重要な要因">CTQ要因</span>が「腫瘍評価データが適切に収集されること」の場合。</p>
+                        <ul class="custom-list space-y-1 text-sm mt-2">
+                            <li><strong>QTLパラメータ:</strong> 腫瘍評価が予定通り実施されなかった（欠測または評価不能）被験者の割合。</li>
+                            <li><strong>QTL閾値:</strong> 例えば「5%」。過去の類似試験データや臨床的重要性を考慮して設定。</li>
+                            <li><strong>アクション:</strong> 閾値を超えた場合、原因調査（例：特定施設の問題か、プロトコル規定の曖昧さか）、トレーニングの再実施、プロトコル改訂などを検討。</li>
+                        </ul>
+                     </div>
+                     <div class="example-box">
+                        <p><strong>具体例2 (同意撤回率):</strong></p>
+                        <p>被験者の権利保護が<span class="tooltip" data-tooltip="Critical to Quality Factors: 試験の品質にとって極めて重要な要因">CTQ要因</span>であり、同意撤回率の高さが問題となる可能性がある場合。</p>
+                         <ul class="custom-list space-y-1 text-sm mt-2">
+                            <li><strong>QTLパラメータ:</strong> 同意撤回した被験者の割合。</li>
+                            <li><strong>QTL閾値:</strong> 例えば「10%」。疾患領域や試験の負担度を考慮して設定。</li>
+                            <li><strong>アクション:</strong> 閾値を超えた場合、同意説明プロセスや被験者負担に関する問題がないか調査。必要に応じて<span class="tooltip" data-tooltip="Informed Consent Form: 説明同意文書">ICF</span>の改訂や<span class="tooltip" data-tooltip="Clinical Research Coordinator: 治験コーディネーター">CRC</span>によるフォローアップ強化などを検討。</li>
+                        </ul>
                      </div>
                  </div>
 
-                <h3>ステークホルダーの特定と多様性</h3>
-                <ul>
-                    <li>臨床試験には多様なステークホルダーが存在します：<strong>患者、研究者、治験依頼者（スポンサー）、医療機関スタッフ（医師、<span class="tooltip" data-tooltip="Clinical Research Coordinator: 治験コーディネーター">CRC</span>等）、倫理委員会（<span class="tooltip" data-tooltip="Ethics Committee / Institutional Review Board: 倫理委員会/治験審査委員会">EC/IRB</span>）、規制当局、データマネージャー、生物統計家、<span class="tooltip" data-tooltip="Clinical Research Associate: 臨床開発モニター">CRA</span>、研究資金提供者、査読者、患者団体、地域社会</strong>など。</li>
-                    <li>特に<strong><span class="tooltip" data-tooltip="Decentralized Clinical Trials: 従来の実施医療機関中心ではなく、患者の自宅や地域の診療所なども活用する臨床試験">DCT</span>（分散型臨床試験）</strong>では、パートナー施設側の医師やリエゾンなど、新たな役割者が加わり範囲が広がります。</li>
-                </ul>
+                 <div class="key-message-box">
+                     <p class="font-semibold text-lg mb-2">QTLs活用のキーメッセージ</p>
+                     <ul class="key-message-list space-y-2 pl-4">
+                         <li>重要な品質指標に「許容範囲」を設定し、客観的に監視する。</li>
+                         <li>"何かおかしい" を早期に検知し、大きな問題になる前に対処する。</li>
+                         <li>チーム内で品質に対する共通認識を持つためのツールとなる。</li>
+                     </ul>
+                 </div>
 
-                <h3>ステークホルダー・エンゲージメントの目的と意義</h3>
-                <ul>
-                    <li><strong>試験の質の向上：</strong> 早期からの視点・ニーズ取り込みにより、デザイン、実施、データ収集、解析等の質を向上。特に患者視点は<span class="tooltip" data-tooltip="Research Question: 研究を通じて明らかにしたい問い">RQ</span>や評価項目の意義判断に不可欠。</li>
-                    <li><strong>患者保護の強化：</strong> 患者意見の反映により、権利、安全性、福祉を保護（例：<span class="tooltip" data-tooltip="Informed Consent: 十分な説明を受けた上での同意">IC</span>プロセス、負担軽減）。</li>
-                    <li><strong>試験結果の信頼性と解釈可能性の向上：</strong> 対話を通じた弱点特定とリスクへの優先的取り組みにより、データ信頼性や意思決定の妥当性を向上。</li>
-                    <li><strong>試験実施の効率化と実現可能性の向上：</strong> 運用上の検討により、実施可能性を高め、複雑さを避け、施設・参加者の負担を軽減。</li>
-                    <li><strong>協力と信頼関係の構築：</strong> 早期かつ頻繁なコラボレーションで相互理解を深め、協力体制を構築。</li>
-                    <li><strong><span class="tooltip" data-tooltip="Unmet Medical Needs: 未だ満たされていない医療ニーズ">アンメット・メディカル・ニーズ</span>への対応：</strong> 患者・医療従事者のニーズ理解と反映により、治療法開発を促進。</li>
-                    <li><strong>社会的意義の明確化：</strong> 対話を通じ、研究の社会的意義や臨床適用可能性を検討。</li>
-                </ul>
-
-                <h3>ステークホルダー・エンゲージメントの方法とタイミング</h3>
-                <ul>
-                    <li><strong>早期からの関与：</strong> 計画初期、特にデザイン設計プロセスからの参画が重要。</li>
-                    <li><strong>開かれた対話とコミュニケーション：</strong> チェックリストに頼らず、率直な意見交換や批判的意見の受容。<span class="tooltip" data-tooltip="Quality by Design Communication Sheet: QbDの考え方に基づき関係者間の対話を促進するためのシート例">QbDコミュニケーションシート</span>等の活用も有効。</li>
-                    <li><strong>定期的なコミュニケーション：</strong> 試験プロセス全体を通じた継続的な対話。</li>
-                    <li><strong><span class="tooltip" data-tooltip="Patient and Public Involvement: 研究プロセスに患者や市民が参画すること">患者・市民参画（PPI）</span>の推進：</strong> 立案段階から患者意見を求め、患者が望む試験を実現。</li>
-                    <li><strong>リスクコミュニケーション：</strong> リスクに関する対話で影響度・重要性を明確化。</li>
-                    <li><strong>フィードバック：</strong> ステークホルダーの期待を理解し、エンゲージメントから学んだことや貢献度をフィードバック。</li>
-                </ul>
-
-                <h3><span class="tooltip" data-tooltip="Critical to Quality Factors: 試験の品質にとって極めて重要な要因">CTQ要因</span>の特定とステークホルダー</h3>
-                <ul>
-                    <li><span class="tooltip" data-tooltip="Quality by Design: 計画段階から品質を作り込むという考え方">QbD</span>の中核である<strong><span class="tooltip" data-tooltip="Critical to Quality Factors: 試験の品質にとって極めて重要な要因">CTQ要因</span>の特定</strong>においても、患者を含む全関連ステークホルダーの視点を考慮することが重要です。</li>
-                    <li>対話を通じて、試験ゴールに最も重要な要因を特定し、信頼性を脅かすリスクを明確にできます。</li>
-                </ul>
-
-                <h3><span class="tooltip" data-tooltip="Quality Management System: 品質を管理するための組織的な仕組み">QMS</span>におけるステークホルダーの役割</h3>
-                <ul>
-                    <li><span class="tooltip" data-tooltip="Quality Management System: 品質を管理するための組織的な仕組み">QMS</span>の実装にはステークホルダーの理解と協力が不可欠。品質方針・目標設定、プロセス構築、リスク管理等はステークホルダーのニーズ・期待に応えるべきです。</li>
-                    <li><strong>トップマネジメント</strong>は、人々を積極的に参加させ、指揮し、支援する責任があります。</li>
-                    <li>医療機関と依頼者間の協力や相互理解も不可欠です。</li>
-                </ul>
-
-                <h3>ステークホルダー・エンゲージメントの課題と克服</h3>
-                <ul>
-                    <li>研究者と患者間の期待ギャップや、適格基準が患者ニーズを考慮しない等の課題が存在し得ます。</li>
-                    <li>克服には、早期からの対話による相互理解と、患者視点の積極的な取り入れが必要です。</li>
-                </ul>
+                <h3 class="text-xl sm:text-2xl font-semibold text-cyan-700 mt-10 mb-4 pt-4 border-t border-gray-200">QTLs導入の課題と今後の展望</h3>
+                 <div class="ml-4"> 
+                    <ul class="custom-list space-y-4 pl-4">
+                        <li>導入の課題は設定目的・方法の理解不足などがあります。関係者の理解促進、職種横断的協働、事例共有が重要です。</li>
+                        <li><span class="tooltip" data-tooltip="International Council for Harmonisation of Technical Requirements for Pharmaceuticals for Human Use: 医薬品規制調和国際会議. E6(R3)はGCPガイドラインの改訂版案">ICH E6(R3)</span>の浸透とともに、標準的な品質管理指標としての活用拡大が期待されます。各組織でのノウハウ蓄積が必要です。</li>
+                    </ul>
+                 </div>
             </div>
-        </div>
+        </section>
 
-        <h2>まとめ</h2>
-        <p>臨床試験および臨床研究における<span class="tooltip" data-tooltip="Quality Management System: 品質を管理するための組織的な仕組み">QMS</span>実装と<span class="tooltip" data-tooltip="Quality by Design: 計画段階から品質を作り込むという考え方">QbD</span>活用において、<strong><span class="tooltip" data-tooltip="Risk-Based Approach: リスクに基づいてアプローチやリソース配分を決定する手法">リスク・ベースド・アプローチ（RBA）</span></strong>、<strong><span class="tooltip" data-tooltip="Quality Tolerance Limits: 事前に定めた品質の許容限界値">品質許容限界（QTLs）</span></strong>、そして<strong><span class="tooltip" data-tooltip="Stakeholder Engagement: 患者、研究者、依頼者など、臨床試験に関わる様々な利害関係者の関与。Patient and Public Involvement (PPI)も含む概念。">ステークホルダー・エンゲージメント</span></strong>は、それぞれが独立した概念であると同時に、相互に強く関連し合う重要な構成要素です。</p>
-        <ul>
-            <li><strong><span class="tooltip" data-tooltip="Risk-Based Approach: リスクに基づいてアプローチやリソース配分を決定する手法">RBA</span></strong>は、リスクに焦点を当てた品質管理の基本的な考え方を提供します。</li>
-            <li><strong><span class="tooltip" data-tooltip="Quality Tolerance Limits: 事前に定めた品質の許容限界値">QTLs</span></strong>は、<span class="tooltip" data-tooltip="Risk-Based Approach: リスクに基づいてアプローチやリソース配分を決定する手法">RBA</span>を実践する上で、特に重要なリスクを監視するための具体的な指標（閾値）となります。</li>
-            <li><strong><span class="tooltip" data-tooltip="Stakeholder Engagement: 患者、研究者、依頼者など、臨床試験に関わる様々な利害関係者の関与。Patient and Public Involvement (PPI)も含む概念。">ステークホルダー・エンゲージメント</span></strong>は、試験計画の初期段階から多様な視点を取り込むことで、適切なリスク特定（<span class="tooltip" data-tooltip="Risk-Based Approach: リスクに基づいてアプローチやリソース配分を決定する手法">RBA</span>のため）、意義のある<span class="tooltip" data-tooltip="Critical to Quality Factors: 試験の品質にとって極めて重要な要因">CTQ要因</span>の定義、そして受け入れ可能な<span class="tooltip" data-tooltip="Quality Tolerance Limits: 事前に定めた品質の許容限界値">QTLs</span>の設定に貢献します。</li>
-        </ul>
-        <p>これらの概念を深く理解し、連携させて実践することが、より質の高い、倫理的で、効率的な、そして患者中心の臨床試験・臨床研究を実現するための鍵となります。</p>
+        
+        <section class="mt-16 pt-8 border-t-2 border-cyan-100"> 
+            <h2 class="text-2xl sm:text-3xl font-semibold text-cyan-800 mb-6 pb-2 border-b border-gray-300">
+                <img src="https://unpkg.com/lucide-static@latest/icons/users.svg" alt="Stakeholder Icon" class="heading-icon"> 
+                <span class="tooltip" data-tooltip="Stakeholder Engagement: 患者、研究者、依頼者など、臨床試験に関わる様々な利害関係者の関与。Patient and Public Involvement (PPI)も含む概念。">ステークホルダー・エンゲージメント</span> - 患者さん・現場と共に創る
+            </h2>
+            <img src="PPI.jpg" alt="ステークホルダー・エンゲージメント（PPI）の概念図" class="rounded-lg shadow-md my-6 mx-auto block max-w-md sm:max-w-lg border border-gray-200 hover:scale-105 transition-transform duration-200 ease-in-out cursor-pointer">
+            <div class="text-gray-800 text-base sm:text-lg leading-relaxed space-y-6 mt-8"> 
+                 <p>臨床試験は、私たち開発担当者だけで成り立つものではありません。患者さん、ご家族、医療従事者、研究者…多くのステークホルダー（利害関係者）との協力が不可欠です。特に、<span class="tooltip" data-tooltip="Patient and Public Involvement: 研究プロセスに患者や市民が参画すること">PPI (患者・市民参画)</span> は、患者さんの視点を計画段階から取り入れる重要な活動です。</p>
 
-    </div>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const headers = document.querySelectorAll('.collapsible-header');
+                 <h3 class="text-xl sm:text-2xl font-semibold text-cyan-700 mt-10 mb-4 pt-4 border-t border-gray-200">なぜ ステークホルダーエンゲージメント が皆さんの業務に役立つのか？</h3>
+                 <div class="ml-4"> 
+                    <ul class="custom-list space-y-4 pl-4">
+                        <li><strong>より良い試験デザイン:</strong> 患者さんや現場の視点を取り入れることで、現実的で負担が少なく、意義のある試験計画（評価項目、来院スケジュール等）を立案できます。</li>
+                        <li><strong>スムーズな試験実施:</strong> 現場の運用上の課題や患者さんのニーズを早期に把握・反映することで、実施可能性が高まり、トラブルを未然に防げます。</li>
+                        <li><strong>参加者満足度の向上:</strong> 患者さんの声が反映された試験は、参加への意欲を高め、同意撤回の減少にも繋がる可能性があります。</li>
+                        <li><strong>リスク特定精度の向上:</strong> 多様な視点からの意見は、私たちが気づかなかった潜在的なリスクを特定する上で非常に有効です。</li>
+                    </ul>
+                 </div>
 
-      headers.forEach(header => {
-        const content = header.nextElementSibling;
-        const icon = header.querySelector('.toggle-icon');
+                <h3 class="text-xl sm:text-2xl font-semibold text-cyan-700 mt-10 mb-4 pt-4 border-t border-gray-200">ステークホルダー・エンゲージメントの目的と意義</h3>
+                 <div class="ml-4"> 
+                    <ul class="custom-list space-y-4 pl-4">
+                        <li><strong>試験の質の向上：</strong> 早期からの視点・ニーズ取り込みにより、デザイン、実施、データ収集、解析等の質を向上。特に患者視点は<span class="tooltip" data-tooltip="Research Question: 研究を通じて明らかにしたい問い">RQ</span>や評価項目の意義判断に不可欠。</li>
+                        <li><strong>患者保護の強化：</strong> 患者意見の反映により、権利、安全性、福祉を保護（例：<span class="tooltip" data-tooltip="Informed Consent: 十分な説明を受けた上での同意">IC</span>プロセス、負担軽減）。</li>
+                        <li><strong>試験結果の信頼性と解釈可能性の向上：</strong> 対話を通じた弱点特定とリスクへの優先的取り組みにより、データ信頼性や意思決定の妥当性を向上。</li>
+                        <li><strong>試験実施の効率化と実現可能性の向上：</strong> 運用上の検討により、実施可能性を高め、複雑さを避け、施設・参加者の負担を軽減。</li>
+                        <li><strong>協力と信頼関係の構築：</strong> 早期かつ頻繁なコラボレーションで相互理解を深め、協力体制を構築。</li>
+                        <li><strong><span class="tooltip" data-tooltip="Unmet Medical Needs: 未だ満たされていない医療ニーズ">アンメット・メディカル・ニーズ</span>への対応：</strong> 患者・医療従事者のニーズ理解と反映により、治療法開発を促進。</li>
+                        <li><strong>社会的意義の明確化：</strong> 対話を通じ、研究の社会的意義や臨床適用可能性を検討。</li>
+                    </ul>
+                     <div class="example-box">
+                        <p><strong>皆さんの業務での活用イメージ：</strong></p>
+                        <p>プロトコルを作成する初期段階で、関連する疾患の患者会 (<span class="tooltip" data-tooltip="Patient Advocacy Group: 患者支援団体">PAG</span>) や経験豊富な<span class="tooltip" data-tooltip="Clinical Research Coordinator: 治験コーディネーター">CRC</span>に、計画案について意見交換会を実施する。例えば、「この評価項目のための検査は、実際の患者さんにとってどれくらいの負担感か？」「同意説明文書のこの表現は分かりやすいか？」「来院以外のデータ収集方法（例：アプリ入力）は現実的か？」といった点を問いかけ、フィードバックを計画に反映させる。</p>
+                    </div>
+                 </div>
 
-        // 初期状態設定（開いておく場合は .open クラスを content に付与しておく）
-        if (!content.classList.contains('open')) {
-          content.style.maxHeight = '0';
-          icon.textContent = '+';
-        } else {
-          // 初期状態で開いている場合、高さを計算して設定
-          window.addEventListener('load', () => {
-              // レイアウト計算が終わるのを少し待つ
-              setTimeout(() => {
-                  content.style.maxHeight = content.scrollHeight + "px";
-                  icon.textContent = '-';
-                  header.classList.add('active');
-                  icon.style.transform = 'rotate(45deg)';
-              }, 100); // 少し遅延させる
-          });
-        }
+                <h3 class="text-xl sm:text-2xl font-semibold text-cyan-700 mt-10 mb-4 pt-4 border-t border-gray-200">ステークホルダー・エンゲージメントの方法とタイミング</h3>
+                 <div class="ml-4"> 
+                    <ul class="custom-list space-y-4 pl-4">
+                        <li><strong>早期からの関与：</strong> 計画初期、特にデザイン設計プロセスからの参画が重要。</li>
+                        <li><strong>開かれた対話とコミュニケーション：</strong> チェックリストに頼らず、率直な意見交換や批判的意見の受容。<span class="tooltip" data-tooltip="Quality by Design Communication Sheet: QbDの考え方に基づき関係者間の対話を促進するためのシート例">QbDコミュニケーションシート</span>等の活用も有効。</li>
+                        <li><strong>定期的なコミュニケーション：</strong> 試験プロセス全体を通じた継続的な対話。</li>
+                        <li><strong><span class="tooltip" data-tooltip="Patient and Public Involvement: 研究プロセスに患者や市民が参画すること">患者・市民参画（PPI）</span>の推進：</strong> 立案段階から患者意見を求め、患者が望む試験を実現。</li>
+                        <li><strong>リスクコミュニケーション：</strong> リスクに関する対話で影響度・重要性を明確化。</li>
+                        <li><strong>フィードバック：</strong> ステークホルダーの期待を理解し、エンゲージメントから学んだことや貢献度をフィードバック。</li>
+                    </ul>
+                 </div>
+                 
+                 <div class="key-message-box">
+                     <p class="font-semibold text-lg mb-2">ステークホルダーエンゲージメント活用のキーメッセージ</p>
+                     <ul class="key-message-list space-y-2 pl-4">
+                         <li>"患者さんのため"だけでなく、"患者さんと共に" 試験を創る意識を持つ。</li>
+                         <li>計画の早い段階で多様な意見を聞くことが、後の手戻りや問題を減らす。</li>
+                         <li>現場の知恵や患者さんの経験は、質の高い試験デザインの宝庫である。</li>
+                     </ul>
+                 </div>
 
-        header.addEventListener('click', function() {
-          const isOpen = content.classList.toggle('open');
-          this.classList.toggle('active'); // ヘッダーにも状態クラスを追加
+                <h3 class="text-xl sm:text-2xl font-semibold text-cyan-700 mt-10 mb-4 pt-4 border-t border-gray-200">ステークホルダー・エンゲージメントの課題と克服</h3>
+                 <div class="ml-4"> 
+                    <ul class="custom-list space-y-4 pl-4">
+                        <li>研究者と患者間の期待ギャップや、適格基準が患者ニーズを考慮しない等の課題が存在し得ます。</li>
+                        <li>克服には、早期からの対話による相互理解と、患者視点の積極的な取り入れが必要です。</li>
+                    </ul>
+                 </div>
+            </div>
+        </section>
 
-          if (isOpen) {
-            // 開くとき: 高さをscrollHeightに設定
-            content.style.maxHeight = content.scrollHeight + "px";
-            icon.textContent = '-';
-            icon.style.transform = 'rotate(45deg)'; // アイコン回転
-          } else {
-            // 閉じるとき: 高さを0に設定
-            content.style.maxHeight = '0';
-            icon.textContent = '+';
-            icon.style.transform = 'rotate(0deg)'; // アイコン戻す
-          }
+        
+        <section class="mt-16 pt-8 border-t-4 border-double border-cyan-700"> 
+            <h2 class="text-2xl sm:text-3xl font-semibold text-cyan-800 mb-6 pb-2 border-b border-gray-300">
+                 <img src="https://unpkg.com/lucide-static@latest/icons/check-check.svg" alt="Summary Icon" class="heading-icon">
+                 まとめ：明日からのアクションのために
+            </h2>
+            <div class="text-gray-800 text-base sm:text-lg leading-relaxed space-y-6"> 
+                <p>本日ご紹介した<span class="tooltip" data-tooltip="Quality Management System: 品質を管理するための組織的な仕組み">QMS</span>、<span class="tooltip" data-tooltip="Quality by Design: 計画段階から品質を作り込むという考え方">QbD</span>、<span class="tooltip" data-tooltip="Risk-Based Approach: リスクに基づいてアプローチやリソース配分を決定する手法">RBA</span>、<span class="tooltip" data-tooltip="Quality Tolerance Limits: 事前に定めた品質の許容限界値">QTLs</span>、<span class="tooltip" data-tooltip="Stakeholder Engagement: 患者、研究者、依頼者など、臨床試験に関わる様々な利害関係者の関与。Patient and Public Involvement (PPI)も含む概念。">ステークホルダーエンゲージメント</span>は、未来の臨床試験品質をデザインするための強力な連携ツールです。</p>
+                
+                <div class="ml-4"> 
+                    <ul class="custom-list space-y-4 pl-6 bg-gradient-to-r from-cyan-50 to-teal-50 p-6 rounded-lg border border-cyan-200 shadow-sm">
+                        <li><strong><span class="tooltip" data-tooltip="Risk-Based Approach: リスクに基づいてアプローチやリソース配分を決定する手法">RBA</span></strong>で、業務の「選択と集中」を進め、効率と質を両立させる。</li>
+                        <li><strong><span class="tooltip" data-tooltip="Quality Tolerance Limits: 事前に定めた品質の許容限界値">QTLs</span></strong>で、品質低下のサインを早期に捉え、プロアクティブに対応する。</li>
+                        <li><strong><span class="tooltip" data-tooltip="Stakeholder Engagement: 患者、研究者、依頼者など、臨床試験に関わる様々な利害関係者の関与。Patient and Public Involvement (PPI)も含む概念。">ステークホルダーエンゲージメント</span></strong>で、多様な視点を取り込み、より現実的で意義のある試験を計画・実行する。</li>
+                    </ul>
+                </div>
+                <p>これらのアプローチを理解し、皆さんの担当する臨床試験の特性に合わせて、一つでも取り入れてみることが、品質向上への大きな一歩となります。</p>
+                 <div class="cta-box">
+                    <h3 class="text-xl sm:text-2xl">次のステップ：私たちにできること</h3>
+                    <ul class="list-disc list-inside text-left max-w-2xl mx-auto space-y-2 text-gray-700">
+                        <li>担当中の試験で「品質上最も重要な要因(<span class="tooltip" data-tooltip="Critical to Quality Factors: 試験の品質にとって極めて重要な要因">CTQ要因</span>)」は何か、チームで議論してみる。</li>
+                        <li>特定した<span class="tooltip" data-tooltip="Critical to Quality Factors: 試験の品質にとって極めて重要な要因">CTQ要因</span>に対するリスクを洗い出し、現在の管理策が十分か評価してみる。</li>
+                        <li>計画中の試験があれば、患者さんや<span class="tooltip" data-tooltip="Clinical Research Coordinator: 治験コーディネーター">CRC</span>の意見を聞く機会を設けることを検討する。</li>
+                        <li><span class="tooltip" data-tooltip="Quality Tolerance Limits: 事前に定めた品質の許容限界値">QTLs</span>の考え方を参考に、現在のモニタリング指標を見直してみる。</li>
+                    </ul>
+                    <p class="mt-4 text-sm text-gray-600">今日の内容について、さらに詳しい情報やディスカッションが必要であれば、いつでも声をかけてください。</p>
+                 </div>
+            </div>
+        </section>
+
+    </div> 
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const readButton = document.getElementById('read-button');
+            const stopButton = document.getElementById('stop-button');
+            const contentContainer = document.getElementById('main-content');
+            const speechStatus = document.getElementById('speech-status');
+            let utterance = null;
+            let elementMap = []; // テキストと要素のマッピング
+            let currentHighlightElement = null; // 現在ハイライト中の要素
+
+            // Web Speech APIが利用可能かチェック
+            if ('speechSynthesis' in window) {
+                speechStatus.textContent = "読み上げ機能を利用できます。";
+            } else {
+                speechStatus.textContent = "お使いのブラウザは読み上げ機能に対応していません。";
+                readButton.disabled = true;
+                readButton.classList.add('opacity-50', 'cursor-not-allowed');
+                return; // APIがなければここで終了
+            }
+
+            // ハイライト解除関数
+            function removeHighlight() {
+                if (currentHighlightElement) {
+                    currentHighlightElement.classList.remove('tts-highlight');
+                    currentHighlightElement = null;
+                }
+            }
+
+            function updateButtonState(isSpeaking) {
+                if (isSpeaking) {
+                    readButton.disabled = true;
+                    readButton.classList.add('opacity-50');
+                    stopButton.classList.remove('hidden');
+                    speechStatus.textContent = "読み上げ中...";
+                } else {
+                    readButton.disabled = false;
+                    readButton.classList.remove('opacity-50');
+                    stopButton.classList.add('hidden');
+                    speechStatus.textContent = "読み上げ機能を利用できます。";
+                    removeHighlight(); // 停止時にもハイライト解除
+                    utterance = null; 
+                }
+            }
+
+            readButton.addEventListener('click', function() {
+                if (speechSynthesis.speaking || speechSynthesis.pending) {
+                     console.log("Speech synthesis is already active.");
+                     speechSynthesis.cancel(); // 既に実行中の場合は一旦キャンセル
+                     // 少し待ってから再開 (キャンセル処理完了待ち)
+                     setTimeout(startReading, 100); 
+                     return;
+                }
+                startReading();
+            });
+
+            function startReading() {
+                // 読み上げるテキストと要素のマッピングを作成
+                textToSpeak = '';
+                elementMap = [];
+                let currentCharIndex = 0;
+                // コンテナ内の主要な要素を選択 (ボタンや背景ボックス、ステータス表示を除く)
+                const elements = contentContainer.querySelectorAll('h1, h2, h3, p, li, blockquote'); 
+                elements.forEach(el => {
+                    // 背景ボックスと読み上げコントロール、CTAボックスを除外
+                    if (!el.closest('.bg-gradient-to-r') && !el.closest('#speech-controls') && !el.closest('.cta-box')) { 
+                         const elementText = el.textContent.trim();
+                         const elementLength = elementText.length;
+                         if (elementLength > 0) {
+                             const mapEntry = { 
+                                 element: el, 
+                                 start: currentCharIndex, 
+                                 end: currentCharIndex + elementLength 
+                             };
+                             elementMap.push(mapEntry);
+                             textToSpeak += elementText + ' '; // 区切り文字としてスペースを使用
+                             currentCharIndex += elementLength + 1; // +1 for space
+                         }
+                    }
+                });
+
+                textToSpeak = textToSpeak.trim(); // 末尾のスペース削除
+
+                if (textToSpeak.length === 0) {
+                    speechStatus.textContent = "読み上げるテキストが見つかりません。";
+                    return;
+                }
+
+                // 発言オブジェクトを作成
+                utterance = new SpeechSynthesisUtterance(textToSpeak);
+                utterance.lang = 'ja-JP'; // 日本語に設定
+                utterance.rate = 2.5; // 読み上げ速度 (ユーザー指定)
+                // 発音の誤りに関する注意： '関係性'などの特定の単語の発音は、ブラウザの音声合成エンジンに依存するため、
+                // このコードで直接修正することは困難です。
+                utterance.pitch = 1.0; // 声の高さ (標準)
+
+                // onboundary イベントハンドラ (読み上げ箇所同期)
+                utterance.onboundary = function(event) {
+                    // console.log(`Boundary: charIndex=${event.charIndex}, type=${event.name}`); // デバッグ用
+                    if (event.name === 'word' || event.name === 'sentence') { // 単語または文の境界で処理
+                        const currentIndex = event.charIndex;
+                        // マッピング情報から現在の要素を検索
+                        const currentEntry = elementMap.find(entry => 
+                            currentIndex >= entry.start && currentIndex < entry.end
+                        );
+
+                        if (currentEntry && currentEntry.element !== currentHighlightElement) {
+                            removeHighlight(); // 前のハイライトを解除
+                            
+                            // H1, H2, H3, blockquote, example-box はハイライトしない
+                            const noHighlightTags = ['H1', 'H2', 'H3', 'BLOCKQUOTE'];
+                            if (!noHighlightTags.includes(currentEntry.element.tagName) && !currentEntry.element.closest('.example-box')) {
+                                currentEntry.element.classList.add('tts-highlight');
+                                currentHighlightElement = currentEntry.element;
+                            } else {
+                                currentHighlightElement = null; // ハイライト対象外
+                            }
+
+
+                            // 要素が画面外ならスクロール (ハイライト対象でなくてもスクロールは行う)
+                            const targetElement = currentEntry.element;
+                            const rect = targetElement.getBoundingClientRect();
+                            // 少し余裕を持たせて判定 (画面上端/下端ギリギリでなくてもスクロール)
+                            const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+                            if (rect.top < 50 || rect.bottom > viewportHeight - 50) { 
+                                targetElement.scrollIntoView({ 
+                                    behavior: 'smooth', 
+                                    block: 'center' // 要素を画面中央に表示
+                                });
+                            }
+                        }
+                    }
+                };
+
+                // 読み上げ開始時の処理
+                utterance.onstart = function() {
+                    console.log("Speech started");
+                    updateButtonState(true);
+                };
+
+                // 読み上げ終了時の処理
+                utterance.onend = function() {
+                    console.log("Speech finished");
+                    updateButtonState(false); // ハイライト解除もここに含まれる
+                };
+
+                // エラー発生時の処理
+                utterance.onerror = function(event) {
+                    console.error("Speech synthesis error:", event.error);
+                    speechStatus.textContent = "読み上げ中にエラーが発生しました。";
+                    updateButtonState(false); // ハイライト解除もここに含まれる
+                };
+
+                // 読み上げ開始
+                window.speechSynthesis.speak(utterance);
+            }
+
+            stopButton.addEventListener('click', function() {
+                // 読み上げをキャンセル
+                window.speechSynthesis.cancel();
+                // ボタンの状態とハイライトを手動でリセット
+                updateButtonState(false); 
+            });
+
+             // ページ離脱時に読み上げを停止
+             window.addEventListener('beforeunload', () => {
+                if (speechSynthesis.speaking) {
+                    speechSynthesis.cancel();
+                }
+             });
+
         });
-      });
-
-      // ウィンドウリサイズ時に開いているコンテンツの高さを再計算
-      window.addEventListener('resize', () => {
-          document.querySelectorAll('.collapsible-content.open').forEach(content => {
-              // 高さを再計算する前に一時的に auto に戻す
-              content.style.maxHeight = 'auto';
-              // 少し待ってから scrollHeight を取得して設定
-              requestAnimationFrame(() => { // よりスムーズな再計算
-                  content.style.maxHeight = content.scrollHeight + "px";
-              });
-          });
-      });
-    });
-</script>
+    </script>
 
 </body>
 </html>
